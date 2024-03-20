@@ -25,7 +25,7 @@ class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
         composeTestRule.apply {
-            composeTestRule.onNodeWithText("Add New").assertIsDisplayed()
+            composeTestRule.onNodeWithText("Detail").assertIsDisplayed()
         }
     }
 }

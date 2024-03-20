@@ -2,6 +2,7 @@ package com.example.splashscreen.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -22,12 +23,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.splashscreen.component.*
+import com.example.splashscreen.listdetail.ListDetailScreen
 import com.example.splashscreen.lists.ListsScreen
 import com.example.splashscreen.main.MainContract.Event
 import com.example.splashscreen.navigator.LinkNavigator
 import com.example.splashscreen.navigator.NavigationDestination
 import com.example.splashscreen.navigator.NavigatorEvent
 import com.example.splashscreen.navigator.ListDestination
+import com.example.splashscreen.navigator.ListDetailDestination
 import com.example.splashscreen.theme.LinkTheme
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,7 +71,6 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialNavigationApi::class)
 @Suppress("ReusedModifierInstance")
 @Composable
 fun LinkMainScreen(
@@ -91,7 +93,7 @@ fun LinkMainScreen(
                 is NavigatorEvent.Directions -> navHostController.navigate(
                     event.destination,
                     event.builder,
-                )
+                ).also { Log.d("MainActivity","Navigate to ${event.destination}") }
 
                 is NavigatorEvent.HandleDeepLink -> navHostController.handleDeepLink(event.intent)
                 is NavigatorEvent.NavigateUp -> navHostController.navigateUp()
@@ -121,6 +123,7 @@ fun LinkMainScreen(
 fun NavGraphBuilder.addComposableDestinations() {
     mapOf<NavigationDestination, @Composable () -> Unit>(
         ListDestination to { ListsScreen() },
+        ListDetailDestination to { ListDetailScreen() },
     )
         .forEach { entry ->
             val destination = entry.key

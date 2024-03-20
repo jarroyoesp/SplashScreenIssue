@@ -1,4 +1,4 @@
-package com.example.splashscreen.lists
+package com.example.splashscreen.listdetail
 
 import androidx.compose.runtime.Immutable
 import com.example.splashscreen.main.ViewEffect
@@ -6,14 +6,12 @@ import com.example.splashscreen.main.ViewEvent
 import com.example.splashscreen.main.ViewState
 
 @Immutable
-object ListsContract {
+object ListDetailContract {
     object State : ViewState
 
-    sealed class Event : ViewEvent {
-        data object OnButtonClicked: Event()
-    }
+    sealed class Event : ViewEvent
 
     sealed class Effect : ViewEffect {
-        object RemoveSplashScreen : Effect()
+        data object RemoveSplashScreen : Effect()
     }
 }
