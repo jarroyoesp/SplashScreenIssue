@@ -23,6 +23,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.splashscreen.component.*
+import com.example.splashscreen.interactor.SplashScreenInteractor
 import com.example.splashscreen.listdetail.ListDetailScreen
 import com.example.splashscreen.lists.ListsScreen
 import com.example.splashscreen.main.MainContract.Event
@@ -43,21 +44,22 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var linkNavigator: LinkNavigator
 
+    @Inject
+    lateinit var splashScreenInteractor: SplashScreenInteractor
+
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
-        val splashScreen = installSplashScreen().apply { // must be called before super.onCreate()
-            setKeepOnScreenCondition { true }  // must stay on until the compose LaunchEffect kicks in
-        }
+        val splashScreen = installSplashScreen()  // must be called before super.onCreate()
         super.onCreate(savedInstanceState)
+        splashScreenInteractor.initialize(splashScreen)  // must be called after super.onCreate()
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             LinkTheme {
                 LinkMainScreen(
                     startDestination = linkNavigator.homeDestination,
                     linkNavigator = linkNavigator,
-                    splashScreen = splashScreen,
                 )
             }
         }
@@ -77,15 +79,10 @@ fun LinkMainScreen(
     linkNavigator: LinkNavigator,
     startDestination: String,
     modifier: Modifier = Modifier,
-    splashScreen: SplashScreen,
 ) {
     val navHostController = rememberNavController()
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    val splashScreenOnScreen = rememberSaveable { mutableStateOf(true) }
-    LaunchedEffect(splashScreen) {
-        splashScreen.setKeepOnScreenCondition { splashScreenOnScreen.value }
-    }
     LaunchedEffect(navHostController) {
         linkNavigator.destinations.onEach { event ->
             keyboardController?.hide()
@@ -93,7 +90,7 @@ fun LinkMainScreen(
                 is NavigatorEvent.Directions -> navHostController.navigate(
                     event.destination,
                     event.builder,
-                ).also { Log.d("MainActivity","Navigate to ${event.destination}") }
+                ).also { Log.d("MainActivity", "Navigate to ${event.destination}") }
 
                 is NavigatorEvent.HandleDeepLink -> navHostController.handleDeepLink(event.intent)
                 is NavigatorEvent.NavigateUp -> navHostController.navigateUp()
@@ -104,9 +101,7 @@ fun LinkMainScreen(
 
     CompositionLocalProvider(
         LocalNavHostController provides navHostController,
-        LocalSplashScreenOnScreen provides splashScreenOnScreen,
-
-        ) {
+    ) {
         Box {
             NavHost(
                 navController = navHostController,

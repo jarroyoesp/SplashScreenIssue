@@ -10,7 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.example.splashscreen.component.LocalSplashScreenOnScreen
+import com.example.splashscreen.listdetail.ListDetailContract
 import com.example.splashscreen.listdetail.ListDetailViewModel
 import com.example.splashscreen.lists.ListsContract.Effect
 import com.example.splashscreen.lists.ListsContract.Event
@@ -37,13 +40,8 @@ fun ListsScreen(
     effectFlow: Flow<Effect>,
     viewModel: ListDetailViewModel = hiltViewModel(),
 ) {
-    val splashScreenOnScreen = LocalSplashScreenOnScreen.current
-    LaunchedEffect(effectFlow) {
-        effectFlow.onEach { effect ->
-            when (effect) {
-                is Effect.RemoveSplashScreen -> splashScreenOnScreen.value = false
-            }
-        }.collect()
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        sendEvent(Event.OnActivityResumed)
     }
     Column(modifier = Modifier.statusBarsPadding()) {
         Button(onClick = { }) {

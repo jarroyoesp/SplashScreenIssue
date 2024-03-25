@@ -9,9 +9,9 @@ import com.example.splashscreen.main.ViewState
 object ListDetailContract {
     object State : ViewState
 
-    sealed class Event : ViewEvent
-
-    sealed class Effect : ViewEffect {
-        data object RemoveSplashScreen : Effect()
+    sealed class Event : ViewEvent {
+        data object OnActivityResumed : Event()
     }
+
+    sealed class Effect : ViewEffect
 }
