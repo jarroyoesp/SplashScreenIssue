@@ -22,7 +22,7 @@ class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
         composeTestRule.apply {
-            composeTestRule.onNodeWithText("Detail").assertIsDisplayed()
+            composeTestRule.onNodeWithText("List screen").assertIsDisplayed()
         }
     }
 }

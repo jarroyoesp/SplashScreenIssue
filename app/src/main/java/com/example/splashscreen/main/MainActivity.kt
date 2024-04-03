@@ -19,11 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.splashscreen.interactor.SplashScreenInteractor
-import com.example.splashscreen.listdetail.ListDetailScreen
 import com.example.splashscreen.lists.ListsScreen
 import com.example.splashscreen.navigator.LinkNavigator
 import com.example.splashscreen.navigator.ListDestination
-import com.example.splashscreen.navigator.ListDetailDestination
 import com.example.splashscreen.navigator.NavigationDestination
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -88,7 +86,6 @@ fun MainScreen(
 fun NavGraphBuilder.addComposableDestinations() {
     mapOf<NavigationDestination, @Composable () -> Unit>(
         ListDestination to { ListsScreen() },
-        ListDetailDestination to { ListDetailScreen() },
     )
         .forEach { entry ->
             val destination = entry.key
