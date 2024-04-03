@@ -26,4 +26,8 @@ class ListDetailPagingSource @AssistedInject constructor(
             itemsAfter = 0,
         )
     }
+    companion object {
+        const val PAGE_SIZE = 20
+    }
 }
+
