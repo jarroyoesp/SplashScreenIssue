@@ -1,18 +1,22 @@
 package com.example.splashscreen.lists
 
 import androidx.lifecycle.ViewModel
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
+import androidx.lifecycle.viewModelScope
+import com.example.splashscreen.navigator.LinkNavigator
+import com.example.splashscreen.navigator.ListDetailDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ListsViewModel @Inject constructor(
-    private val pagingSourceFactory: ListsPagingSource.Factory,
+    private val navigator: LinkNavigator,
 ) : ViewModel() {
-    val items: Flow<PagingData<String>> = Pager(config = PagingConfig(pageSize = 20)) {
-        pagingSourceFactory.create()
-    }.flow
+    init {
+        viewModelScope.launch {
+            delay(2000)
+            navigator.navigate(ListDetailDestination.route)
+        }
+    }
 }
